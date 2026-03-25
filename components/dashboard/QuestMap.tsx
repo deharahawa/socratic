@@ -47,7 +47,7 @@ export function QuestMap({ projects }: Props) {
                   </p>
                 </div>
                 <Link
-                  href={`/forge/${p.id}`}
+                  href={`/workspace/${p.id}`}
                   className="shrink-0 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-center text-xs font-medium text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white"
                 >
                   Entrar na Forja

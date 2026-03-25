@@ -25,24 +25,47 @@ const weekdayLabels = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 type Props = {
   days: HeatmapDay[];
+  compact?: boolean;
 };
 
-export function Heatmap({ days }: Props) {
+export function Heatmap({ days, compact = false }: Props) {
   const columns = useMemo(() => buildWeekColumns(days), [days]);
+  const compactColumns = compact ? columns.slice(-16) : columns;
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md">
+    <section
+      className={[
+        "rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md",
+        compact ? "p-4" : "p-5",
+      ].join(" ")}
+    >
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-zinc-50">
+          <h2
+            className={[
+              "font-semibold text-zinc-50",
+              compact ? "text-base" : "text-lg",
+            ].join(" ")}
+          >
             Architect&apos;s Heatmap
           </h2>
-          <p className="mt-1 max-w-xl text-sm text-zinc-400">
-            Contribuições dos últimos 90 dias por{" "}
-            <span className="text-zinc-300">concept_tag</span> (estilo XP_Log).
-          </p>
+          {compact ? (
+            <p className="mt-1 max-w-xl text-xs text-zinc-400">
+              Janela reduzida para leitura rápida da última atividade.
+            </p>
+          ) : (
+            <p className="mt-1 max-w-xl text-sm text-zinc-400">
+              Contribuições dos últimos 90 dias por{" "}
+              <span className="text-zinc-300">concept_tag</span> (estilo XP_Log).
+            </p>
+          )}
         </div>
-        <ul className="mt-3 flex flex-wrap gap-3 text-xs text-zinc-500 sm:mt-0">
+        <ul
+          className={[
+            "flex flex-wrap gap-3 text-zinc-500",
+            compact ? "mt-2 text-[11px]" : "mt-3 text-xs sm:mt-0",
+          ].join(" ")}
+        >
           <li className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-sm bg-cyan-400/90 shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
             Go
@@ -58,7 +81,7 @@ export function Heatmap({ days }: Props) {
         </ul>
       </div>
 
-      <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
+      <div className={compact ? "mt-4 flex gap-2 overflow-x-auto pb-1" : "mt-6 flex gap-2 overflow-x-auto pb-1"}>
         <div
           className="flex flex-col justify-between py-0.5 text-[10px] text-zinc-600"
           aria-hidden
@@ -70,7 +93,7 @@ export function Heatmap({ days }: Props) {
           ))}
         </div>
         <div className="flex min-w-0 gap-1">
-          {columns.map((col, ci) => (
+          {compactColumns.map((col, ci) => (
             <div key={ci} className="flex flex-col gap-1">
               {col.map((cell, ri) => {
                 if (!cell) {

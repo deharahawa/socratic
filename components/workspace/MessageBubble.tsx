@@ -17,6 +17,8 @@ type MessageBubbleProps = {
   questPhase?: QuestPhase;
   /** Bolha de erro (ex.: Mentor offline) */
   isError?: boolean;
+  /** Sobrescreve classes da bolha do Mentor (modo debugger, etc.) */
+  assistantClassName?: string;
 };
 
 function CodeBlockWithHeader({
@@ -86,6 +88,7 @@ export function MessageBubble({
   content,
   questPhase = "DISCOVERY",
   isError = false,
+  assistantClassName,
 }: MessageBubbleProps) {
   const components: Components = useMemo(
     () => ({
@@ -127,6 +130,7 @@ export function MessageBubble({
   }
 
   const t = QUEST_PHASE_THEMES[questPhase];
+  const assistantStyle = assistantClassName ?? `${t.assistantBorder} ${t.assistantBg}`;
 
   if (isError) {
     return (
@@ -147,7 +151,7 @@ export function MessageBubble({
     <div className="flex w-full justify-start">
       <div
         className={
-          `max-w-[min(100%,42rem)] rounded-lg ${t.assistantBorder} ${t.assistantBg} px-4 py-3 text-left shadow-sm ` +
+          `max-w-[min(100%,42rem)] rounded-lg ${assistantStyle} px-4 py-3 text-left shadow-sm ` +
           baseMarkdown
         }
       >

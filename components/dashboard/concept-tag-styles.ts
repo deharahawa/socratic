@@ -6,22 +6,22 @@ export const CONCEPT_TAG_CELL: Record<
   { bg: string; shadow: string }
 > = {
   Go: {
-    bg: "bg-cyan-400/90",
-    shadow: "0 0 10px rgba(34, 211, 238, 0.75), 0 0 4px rgba(34, 211, 238, 0.9)",
+    bg: "bg-cyan-400/70",
+    shadow: "0 2px 6px rgba(34, 211, 238, 0.28)",
   },
   Arquitetura: {
-    bg: "bg-purple-500/90",
-    shadow: "0 0 10px rgba(168, 85, 247, 0.75), 0 0 4px rgba(168, 85, 247, 0.9)",
+    bg: "bg-purple-500/70",
+    shadow: "0 2px 6px rgba(168, 85, 247, 0.28)",
   },
   DB: {
-    bg: "bg-emerald-500/90",
-    shadow: "0 0 10px rgba(16, 185, 129, 0.75), 0 0 4px rgba(16, 185, 129, 0.9)",
+    bg: "bg-emerald-500/70",
+    shadow: "0 2px 6px rgba(16, 185, 129, 0.28)",
   },
 };
 
 export const DEFAULT_CONCEPT_CELL = {
-  bg: "bg-zinc-500/80",
-  shadow: "0 0 8px rgba(161, 161, 170, 0.5)",
+  bg: "bg-zinc-500/65",
+  shadow: "0 2px 6px rgba(161, 161, 170, 0.2)",
 };
 
 export function getConceptCellStyles(tag: string) {
