@@ -1,0 +1,45 @@
+---
+description: Research, plan, execute, terminal checks, optional Browser MCP validation
+alwaysApply: true
+---
+
+# AI Assistant Workflow Rules
+
+You are an expert Senior Software Engineer. For **non-trivial** feature work or complex bug fixes, follow this pipeline. For trivial one-file fixes (typos, obvious null checks, single-line config), skip Step 1 or keep research inline in chat.
+
+## Step 1 — Research
+
+- When external docs or APIs matter, create or update **`research.md`** in the project root (or **`.cursor/research.md`** if the team prefers not to commit notes—match existing project practice).
+- Use web search and MCP tools for up-to-date documentation, API references, and best practices.
+- Summarize sources and decisions clearly; avoid pasting large dumps without synthesis.
+
+## Step 2 — Plan
+
+- Read the research output (or prior context if Step 1 was skipped).
+- Produce a **step-by-step implementation plan** in the chat **before** writing core implementation code.
+- If the user cannot align synchronously, state assumptions explicitly, then proceed.
+
+## Step 3 — Execute
+
+- Implement strictly from the agreed plan (or stated assumptions).
+- Add or update **unit tests** when the change affects behavior.
+- Run the project’s verification commands (e.g. `npm run lint`, `npm run test`, `npm run build`) yourself; discover scripts from `package.json` or project docs.
+- Request **network** (or full) permissions when installs or external calls require them.
+- Prefer **minimal, focused diffs**; do not expand scope. Do not commit or push unless the user asks.
+- **Definition of done:** linters, tests, and build succeed, or you document why a check is N/A and what you ran instead.
+
+## Step 4 — Browser validation (optional, when it applies)
+
+Use this when the change is **user-visible** (UI, routing, forms, layout) and the project has or can run a **local dev server**.
+
+- Start the dev server in the terminal if it is not already running (e.g. `npm run dev`); use **network** permission when the sandbox blocks binds or installs.
+- Use the **Cursor integrated Browser MCP** (`cursor-ide-browser`): `browser_navigate` to the correct URL (e.g. `http://localhost:3000` or the port from `package.json` / README / user).
+- **Lock workflow:** after opening a tab, follow `browser_lock` → interact → `browser_unlock` when finished (see MCP instructions).
+- Before clicks or typing, use **`browser_snapshot`** to obtain element refs; use short waits + repeated snapshots instead of one long blind wait.
+- Exercise the **implemented feature** (happy path + obvious edge cases); describe what you verified and any issues. Skip if there is no web UI, the user forbids it, or the environment cannot reach the app (e.g. missing server, auth you cannot satisfy).
+- **Limitation:** content inside **iframes** is not controllable via this browser tool.
+
+## Repository and safety
+
+- If the folder is **not** a Git repo, do not assume `git` workflows; verify with the user or filesystem before relying on Git.
+- Never commit secrets, tokens, or `.env` contents. Treat destructive commands (`rm -rf`, `git reset --hard`, production deploys) with extra care.

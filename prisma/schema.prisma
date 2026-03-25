@@ -1,0 +1,99 @@
+// Socratic Forge — Quests, Incidentes, XP e progresso (PostgreSQL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectType {
+  GREENFIELD
+  INCIDENT
+}
+
+enum QuestStatus {
+  LOCKED
+  DISCOVERY
+  HANDS_ON
+  VALIDATION
+  COMPLETED
+}
+
+model User {
+  id              String @id @default(cuid())
+  email           String @unique
+  total_xp        Int    @default(0)
+  compute_credits Int    @default(0)
+
+  questProgress UserQuestProgress[]
+  xpLogs        XP_Log[]
+}
+
+model Project {
+  id            String      @id @default(cuid())
+  title         String
+  description   String      @db.Text
+  base_xp       Int
+  core_concepts String[]
+  type          ProjectType
+
+  quests       Quest[]
+  incidentData IncidentData[]
+}
+
+model Quest {
+  id                 String   @id @default(cuid())
+  title              String
+  projectId          String
+  big_picture        String   @db.Text
+  architect_mindset  String   @db.Text
+  definition_of_done String[]
+  order              Int
+
+  project  Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  progress UserQuestProgress[]
+
+  @@index([projectId])
+}
+
+model UserQuestProgress {
+  id               String      @id @default(cuid())
+  userId           String
+  questId          String
+  status           QuestStatus
+  delegation_count Int         @default(0)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quest Quest @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questId])
+  @@index([userId])
+  @@index([questId])
+}
+
+model IncidentData {
+  id          String @id @default(cuid())
+  projectId   String
+  severity    String
+  user_report String @db.Text
+  system_logs String @db.Text
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model XP_Log {
+  id          String @id @default(cuid())
+  userId      String
+  amount      Int
+  reason      String
+  concept_tag String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
